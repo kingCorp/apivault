@@ -30,7 +30,8 @@ exports.user_login = (req, res, next) => {
                 return res.status(200).json({
                     message: 'Auth Successful',
                     userId: user[0]._id,
-                    token: token
+                    token: token,
+                    username: user[0].username
                 })
             }
             return res.status(402).json({
@@ -82,7 +83,9 @@ exports.user_signup = (req, res, next)=>{
                                 res.status(200).json({
                                     message: 'User created',
                                     details: result,
-                                    token: token
+                                    token: token,
+                                    userId: result._id,
+                                    username: result.username
                                 })
                             })
                             .catch(err => {
