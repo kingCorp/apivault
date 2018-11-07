@@ -10,7 +10,7 @@ router.get('/', UserController.users_get_all);
 router.post('/signup', UserController.user_signup);
 
 //login users
-router.post('/login', UserController.user_login);
+//router.post('/login', UserController.user_login);
 
 //delete users
 router.delete('/:userId', checkAuth, UserController.user_delete)
