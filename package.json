@@ -4,7 +4,9 @@
   "main": "App.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prestart": "next build",
+    "build": "next build",
+    "dev": "nodemon server.js",
+    "postinstall": "npm run build",
     "start": "nodemon server.js"
   },
   "author": "james",
