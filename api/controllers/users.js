@@ -71,11 +71,18 @@ exports.user_signup = (req, res, next)=>{
                             phone: '+234'+req.body.phone,
                             username: req.body.username
                         });
+                        
                         user.save()
                             .then(result => {
+                                const token = jwt.sign(
+                                    {email: result.email, userId: result._id },
+                                    "secret",
+                                    { expiresIn: "1h"}
+                                );
                                 res.status(200).json({
                                     message: 'User created',
-                                    details: result
+                                    details: result,
+                                    token: token
                                 })
                             })
                             .catch(err => {

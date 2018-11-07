@@ -16,7 +16,7 @@ exports.files_get_all = (req, res, next) => {
                     file: doc.fileType,
                     request:{
                         type: 'GET',
-                        url: 'localhost:3000/files/'+doc._id
+                        url: 'https://rnvault.herokuapp.com/files/'+doc._id
                     }
                 }
             })
@@ -46,7 +46,7 @@ exports.files_get_all_user = (req, res, next) => {
                     file: doc.fileType,
                     request:{
                         type: 'GET',
-                        url: 'localhost:3000/files/'+doc._id
+                        url: 'https://rnvault.herokuapp.com/files/'+doc._id
                     }
                 }
             })
@@ -80,7 +80,7 @@ exports.files_create_files = (req, res, next) => {
                 file: result.file,
                 request:{
                     type: 'GET',
-                    url: 'localhost:3000/files/'+result._id
+                    url: 'https://rnvault.herokuapp.com/files/'+result._id
                 }
             }
         })
@@ -109,7 +109,7 @@ exports.files_update_byID = (req, res, next) => {
             message: 'Updated successfully',
             request:{
                 type: 'GET',
-                url: 'localhost:3000/files/'+id
+                url: 'https://rnvault.herokuapp.com/files/'+id
             }
         });
     })
@@ -149,7 +149,7 @@ exports.files_delete_byID = (req, res, next) => {
             message: 'File Deleted',
             request: {
                 type: 'POST',
-                url: 'localhost:3000/files',
+                url: 'https://rnvault.herokuapp.com/files',
                 body: {file: String}
             }
         });

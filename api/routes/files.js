@@ -23,6 +23,7 @@ const VaultFile = require('../models/fileModel');
 //get all files
 router.get('/', FilesController.files_get_all);
 
+//get all files for each user
 router.get('/:userId', checkAuth,FilesController.files_get_all_user);
 
 //post files
