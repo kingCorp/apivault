@@ -5,14 +5,16 @@ const VaultFile = require('../models/fileModel');
 //
 exports.files_get_all = (req, res, next) => {
     VaultFile.find()
-    .select('_id fileType')
+    //.select('_id fileType userId')
     .exec()
     .then(docs => {
+        console.log(docs)
         const response = {
             count: docs.length,
-            file: docs.map(doc => {
+            fileInfo: docs.map(doc => {
                 return{
                     _id: doc._id,
+                    userId: doc.userId,
                     file: doc.fileType,
                     request:{
                         type: 'GET',
@@ -34,22 +36,17 @@ exports.files_get_all = (req, res, next) => {
 exports.files_get_all_user = (req, res, next) => {
     const userId = req.params.userId;
     VaultFile.find({userId: userId})
-    .select('_id fileType')
+    //.select('_id userId fileNa')
     .exec()
     .then(docs => {
         const response = {
             count: docs.length,
-            message: 'Auth successful',
-            file: docs.map(doc => {
-                return{
-                    _id: doc._id,
-                    file: doc.fileType,
-                    request:{
-                        type: 'GET',
-                        url: 'https://rnvault.herokuapp.com/files/'+doc._id
-                    }
-                }
-            })
+            message: 'process successful',
+            fileInfo: docs,
+            request:{
+                type: 'GET',
+                url: 'https://rnvault.herokuapp.com/files/'+docs[0]._id
+            }
         }
         res.status(200).json(response);
     })
@@ -64,20 +61,26 @@ exports.files_get_all_user = (req, res, next) => {
 
 //post files
 exports.files_create_files = (req, res, next) => {
-    console.log(req.file)
+    console.log(req.file);
     const myfile = new VaultFile({
         _id: new mongoose.Types.ObjectId(),
         userId: req.body.userId,
-        fileType: req.file.path 
+        filePath: req.file.path,
+        fileName: req.file.originalname,
+        fileType: req.file.mimetype,
+        fileSize: Math.floor(req.file.size/1000) 
     });
     myfile.save().then(result => {
         console.log(result);
         res.status(200).json({
-            message: "created successfully",
+            message: "uploaded successfully",
             details: {
                 _id: result._id,
                 userId: result.userId,
-                file: result.file,
+                filePath: result.filePath,
+                fileName: result.fileName,
+                fileType: result.fileType,
+                fileSize: result.fileSize,
                 request:{
                     type: 'GET',
                     url: 'https://rnvault.herokuapp.com/files/'+result._id
@@ -90,6 +93,32 @@ exports.files_create_files = (req, res, next) => {
             res.status(500).json({ error: err, message: 'Could not save' });
         });
 }
+
+
+
+//get file by ID
+exports.files_get_byID = (req, res, next) => {
+    const id = req.params.fileId
+    VaultFile.findById(id)
+       // .select('_id userId fileType')
+        .exec()
+        .then(doc => {
+            console.log(doc);
+            if(doc !== null){
+                res.status(200).json({
+                    message: "sucessfull",
+                    doc
+                });
+            }else{
+                res.status(200).json({message: "ID doesnt exist or has been deleted"});
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ error: err , message: "ID Not FOUND"});
+        });
+}
+
 
 
 //Update file by ID
@@ -119,25 +148,6 @@ exports.files_update_byID = (req, res, next) => {
     });
 }
 
-//get file by ID
-exports.files_get_byID = (req, res, next) => {
-    const id = req.params.fileId
-    VaultFile.findById(id)
-        .select('_id fileType')
-        .exec()
-        .then(doc => {
-            console.log(doc);
-            if(doc !== null){
-                res.status(200).json(doc);
-            }else{
-                res.status(200).json({message: "ID doesnt exist or has been deleted"});
-            }
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({ error: err , message: "ID Not FOUND"});
-        });
-}
 
 //delete file controller
 exports.files_delete_byID = (req, res, next) => {

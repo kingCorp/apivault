@@ -107,7 +107,10 @@ exports.users_get_all =  (req, res, next)=>{
     User.find()
     .exec()
     .then(docs =>{
-        res.status(200).json(docs);
+        res.status(200).json({
+            count: docs.length,
+            Users: docs
+        });
     })
     .catch(err=>{
         res.status(409).json(err)

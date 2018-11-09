@@ -24,7 +24,7 @@ const VaultFile = require('../models/fileModel');
 router.get('/', FilesController.files_get_all);
 
 //get all files for each user
-router.get('/:userId', checkAuth,FilesController.files_get_all_user);
+router.get('/user/:userId', checkAuth, FilesController.files_get_all_user);
 
 //post files
 router.post('/', checkAuth, upload.single('fileType'), FilesController.files_create_files);
@@ -34,7 +34,7 @@ router.patch('/:fileId', checkAuth, FilesController.files_update_byID);
 
 
 //get files by ID
-router.get('/:fileId', checkAuth, FilesController.files_get_byID);
+router.get('/:fileId', FilesController.files_get_byID);
 
 //delete files
 router.delete('/:fileId', checkAuth, FilesController.files_delete_byID);
