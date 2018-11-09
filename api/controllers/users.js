@@ -11,13 +11,14 @@ exports.user_login = (req, res, next) => {
     .then(user =>{
         if(user.length > 1){
             return res.status(402).json({
-                message: 'Auth failed'
+                message: 'Authentication failed'
             })
         }
         bcrypt.compare(req.body.password, user[0].password, (err, result)=>{
             if(err){
                 return res.status(402).json({
-                    message: 'Auth failed'
+                    message: 'Authentication failed',
+                    error: err
                 })
             }
             if(result){
@@ -28,14 +29,14 @@ exports.user_login = (req, res, next) => {
                 );
 
                 return res.status(200).json({
-                    message: 'Auth Successful',
+                    message: 'Authentication Successful',
                     userId: user[0]._id,
                     token: token,
                     username: user[0].username
                 })
             }
             return res.status(402).json({
-                message: 'Auth failed 2'
+                message: 'Authentication failed'
             })
         })
     })

@@ -27,7 +27,7 @@ router.get('/', FilesController.files_get_all);
 router.get('/user/:userId', checkAuth, FilesController.files_get_all_user);
 
 //post files
-router.post('/', checkAuth, upload.single('fileType'), FilesController.files_create_files);
+router.post('/',  upload.single('fileType'), FilesController.files_create_files);
 
 //update files
 router.patch('/:fileId', checkAuth, FilesController.files_update_byID);
