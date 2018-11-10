@@ -37,6 +37,6 @@ router.patch('/:fileId', checkAuth, FilesController.files_update_byID);
 router.get('/:fileId', FilesController.files_get_byID);
 
 //delete files
-router.delete('/:fileId', checkAuth, FilesController.files_delete_byID);
+router.delete('/:fileId', FilesController.files_delete_byID);
 
 module.exports = router;
