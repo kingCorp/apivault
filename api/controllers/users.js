@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 
 //log user in
 exports.user_login = (req, res, next) => {
-    User.find({email: req.body.email})
+    User.find({phone: req.body.phone})
     .exec()
     .then(user =>{
         if(user.length > 1){
@@ -44,7 +44,7 @@ exports.user_login = (req, res, next) => {
         console.log(err)
         res.status(402).json({
             error: err,
-            message: 'Email or Password INVALID',
+            message: 'Phone or Password INVALID',
         })
     })
 }
