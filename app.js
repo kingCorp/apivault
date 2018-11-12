@@ -10,10 +10,31 @@ const filesRoutes = require('./api/routes/files');
 const usersRoutes = require('./api/routes/user');
 
 //db connect
-mongoose.connect("mongodb://vault:"+process.env.MONGO_ATLAS_PW+"@cluster0-shard-00-00-sqfmj.mongodb.net:27017,cluster0-shard-00-01-sqfmj.mongodb.net:27017,cluster0-shard-00-02-sqfmj.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true",
-{ useNewUrlParser: true })
+// mongoose.connect("mongodb://vault:"+process.env.MONGO_ATLAS_PW+"@cluster0-shard-00-00-sqfmj.mongodb.net:27017,cluster0-shard-00-01-sqfmj.mongodb.net:27017,cluster0-shard-00-02-sqfmj.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true",
+// { useNewUrlParser: true })     
+
+//mongoose.connect('mongodb://attasiemj@gmail.com:Jaymes92@ds155653.mlab.com:55653/vault', options);
 
 mongoose.Promise = global.Promise
+var mongodbUri ='mongodb://@ds155653.mlab.com:55653/vault';
+mongoose.connect(mongodbUri, {
+  useNewUrlParser: true,
+  auth: {
+    user: 'attasiemj@gmail.com',
+    password: 'Jaymes92'
+  }
+})
+var conn = mongoose.connection;    
+conn.on('error', console.error.bind(console, 'connection error:'));  
+ 
+conn.once('open', () =>{
+ console.log('connected to a database')                       
+});
+
+
+
+
+
 
 //logs the server
 app.use(morgan('dev'));

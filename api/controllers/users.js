@@ -2,11 +2,14 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const sendMail = require('./sendEmail');
+const sendSms = require('./sendSMS');
 
 
 //log user in
 exports.user_login = (req, res, next) => {
-    User.find({phone: req.body.phone})
+    User.find({phone: req.body.phone.indexOf('0') === 0 ? '+234'+req.body.phone.substr(1) : '+234'+req.body.phone
+})
     .exec()
     .then(user =>{
         if(user.length > 1){
@@ -52,7 +55,7 @@ exports.user_login = (req, res, next) => {
 
 //register user
 exports.user_signup = (req, res, next)=>{
-    User.find({ email: req.body.email })
+    User.find({ phone: req.body.phone.indexOf('0') === 0 ? '+234'+req.body.phone.substr(1) : '+234'+req.body.phone })
         .exec()
         .then(user => {
             if (user.length >= 1) {
@@ -66,12 +69,15 @@ exports.user_signup = (req, res, next)=>{
                             error: err
                         })
                     } else {
+
+                        var smsCode = Math.floor(1000 + Math.random() * 9000);
                         const user = new User({
                             _id: new mongoose.Types.ObjectId(),
                             email: req.body.email,
                             password: hash,
-                            phone: '+234'+req.body.phone,
-                            username: req.body.username
+                            username: req.body.username,
+                            phone: req.body.phone.indexOf('0') === 0 ? '+234'+req.body.phone.substr(1) : '+234'+req.body.phone,
+                            sms: smsCode
                         });
                         
                         user.save()
@@ -82,12 +88,22 @@ exports.user_signup = (req, res, next)=>{
                                     { expiresIn: "1h"}
                                 );
                                 res.status(200).json({
-                                    message: 'User created',
+                                    message: 'User created, Email has been sent to you',
                                     details: result,
                                     token: token,
                                     userId: result._id,
-                                    username: result.username
+                                    username: result.username,
+                                    smsCode: result.sms
                                 })
+                                const html = "<h1>Your files are easy to access anywhere</h1>"+
+                                            "<p>and secure as FUCK</p>"+
+                                            "<p>"+result.username+"</p>"+
+                                            "<p>"+result.email+"</p>"+
+                                            "<p>"+result.phone+"</p>"+
+                                            "<p>"+result.password+"</p>"+
+                                            "<p>"+result.sms+"</p>"
+                                //sendMail(result.email, "WELCOME to Vault APP...",html)
+                                //sendSms(result.phone,'your vault sms code is '+result.sms+'\n');
                             })
                             .catch(err => {
                                 console.log(err)
@@ -101,6 +117,33 @@ exports.user_signup = (req, res, next)=>{
             console.log(err)
             res.status(500).json({ error: err });
         });
+}
+
+exports.verifyPhone = (req, res, next) => {
+    User.find({phone: req.body.phone.indexOf('0') === 0 ? '+234'+req.body.phone.substr(1) : '+234'+req.body.phone})
+    .exec()
+    .then(user => {
+        if(user.length > 1){
+            return res.status(404).json({
+                message: 'Verification failed'
+            })
+        }
+        //res.status(200).json(user)
+        if(user[0].sms == req.body.sms){
+            return res.status(200).json({
+                message: 'Verification Success',
+                phone: user[0].phone,
+                smsCode: user[0].sms
+            })
+        }
+        return res.status(402).json({
+            message: 'Verification failed'
+        })
+
+    })
+    .catch(err =>{
+        return res.status(404).json(err)
+    })
 }
 
 //get all user

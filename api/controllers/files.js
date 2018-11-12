@@ -77,7 +77,7 @@ exports.files_create_files = (req, res, next) => {
             details: {
                 _id: result._id,
                 userId: result.userId,
-                filePath: result.filePath+result.fileType,
+                filePath: result.filePath,
                 fileName: result.fileName,
                 fileType: result.fileType,
                 fileSize: result.fileSize,
