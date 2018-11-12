@@ -60,7 +60,7 @@ exports.user_signup = (req, res, next)=>{
         .then(user => {
             if (user.length >= 1) {
                 res.status(401).json({
-                    message: 'Email already exist'
+                    message: 'Phone number already exist'
                 });
             } else {
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -120,7 +120,7 @@ exports.user_signup = (req, res, next)=>{
 }
 
 exports.verifyPhone = (req, res, next) => {
-    User.find({phone: req.body.phone.indexOf('0') === 0 ? '+234'+req.body.phone.substr(1) : '+234'+req.body.phone})
+    User.find({phone: req.body.phone})
     .exec()
     .then(user => {
         if(user.length > 1){
