@@ -102,7 +102,7 @@ exports.user_signup = (req, res, next)=>{
                                             "<p>"+result.phone+"</p>"+
                                             "<p>"+result.password+"</p>"+
                                             "<p>"+result.sms+"</p>"
-                                //sendMail(result.email, "WELCOME to Vault APP...",html)
+                                sendMail(result.email, "WELCOME to Vault APP...",html)
                                 //sendSms(result.phone,'your vault sms code is '+result.sms+'\n');
                             })
                             .catch(err => {
