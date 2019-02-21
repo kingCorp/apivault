@@ -162,6 +162,24 @@ exports.users_get_all =  (req, res, next)=>{
 }
 
 
+//get all user
+exports.users_show =  (req, res, next)=>{
+    const id = req.params.id
+    User.findById(id).select('username, email, phone')
+    .exec()
+    .then(doc =>{
+        res.status(200).json({
+            User: doc
+        });
+    })
+    .catch(err=>{
+        res.status(409).json(err)
+    })
+}
+
+
+
+
 //delete user
 exports.user_delete = (req, res, next)=> {
     const id = req.params.userId;

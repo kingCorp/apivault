@@ -12,6 +12,9 @@ router.post('/signup', UserController.user_signup);
 //login users
 router.post('/login', UserController.user_login);
 
+//show user
+router.get('/:id',  UserController.user_show)
+
 //delete users
 router.delete('/:userId',  UserController.user_delete)
 
