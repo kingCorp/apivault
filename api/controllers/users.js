@@ -165,7 +165,7 @@ exports.users_get_all =  (req, res, next)=>{
 //get all user
 exports.users_show =  (req, res, next)=>{
     const id = req.params.id
-    User.findById(id).select('username, email, phone')
+    User.findById(id)
     .exec()
     .then(doc =>{
         res.status(200).json({
