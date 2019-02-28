@@ -57,6 +57,7 @@ exports.files_get_all = (req, res, next) => {
 
 exports.files_get_all_user = (req, res, next) => {
   const userId = req.params.userId;
+  
   VaultFile.find({
       userId: userId
     })
@@ -93,25 +94,24 @@ exports.files_create_files = (req, res, next) => {
     },
     function (error, resul) {
       console.log(resul, error);
+      var arr = resul.url.split("/");
+      var uriNew = resul.url.replace(arr[6], "fl_attachment/"+arr[6])
       const myfile = new VaultFile({
         _id: new mongoose.Types.ObjectId(),
         userId: req.body.userId,
-        filePath: resul.url,
+        filePath: uriNew,
         fileName: req.file.originalname,
         fileType: resul.format,
         fileSize: Math.floor(req.file.size / 1000)
       });
       myfile.save().then(result => {
           console.log(result);
-          var arr = result.filePath.split("/");
-          var uriNew = result.filePath.replace(arr[6], "fl_attachment/"+arr[6])
-
           res.status(200).json({
             message: "uploaded successfully",
             details: {
               _id: result._id,
               userId: result.userId,
-              filePath: uriNew,
+              filePath: result.filePath,
               fileName: result.fileName,
               fileType: result.fileType,
               fileSize: result.fileSize,
